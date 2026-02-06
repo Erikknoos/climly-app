@@ -37,9 +37,7 @@ function MainApp() {
   const [loading, setLoading] = useState(false);
 const [co2Result, setCo2Result] = useState<any>(null);
 const [showResult, setShowResult] = useState(false);
-
-
-
+const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 const [notification, setNotification] = useState<{
   message: string;
   type: 'success' | 'error' | 'info';
@@ -72,7 +70,7 @@ const [loginError, setLoginError] = useState('');
   
   
   try {
-    const response = await fetch('http://localhost:8080/api/co2/calculate', {
+    const response = await fetch('https://climly-backend.onrender.com/api/co2/calculate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +116,7 @@ const downloadPDF = async () => {
       button.textContent = '⏳ Genererar PDF...';
     }
     
-    const response = await fetch('http://localhost:8080/api/co2/generate-report', {
+    const response = await fetch('https://climly-backend.onrender.com/api/co2/generate-report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,6 +181,13 @@ const downloadPDF = async () => {
     }
   };
 
+  {/*LOG OUT*/}
+  const handleLogout = () => {
+  setIsLoggedIn(false);
+  setShowLogoutConfirm(false);
+  showNotification('👋 Utloggad', 'info');
+};
+
   return (
     <>
     {notification && (
@@ -208,10 +213,7 @@ const downloadPDF = async () => {
     
 
           {isLoggedIn ? (
-  <button className="login-btn" onClick={() => {
-    setIsLoggedIn(false);
-    showNotification('👋 Utloggad', 'info');
-  }}>
+  <button className="login-btn" onClick={() => setShowLogoutConfirm(true)}>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="8" r="4"/>
       <path d="M20 21a8 8 0 1 0-16 0"/>
@@ -674,7 +676,7 @@ const downloadPDF = async () => {
             type="text"
             value={loginUsername}
             onChange={(e) => setLoginUsername(e.target.value)}
-            placeholder="adminclimly"
+            placeholder="användarnamn"
             autoComplete="username"
           />
         </div>
@@ -699,9 +701,38 @@ const downloadPDF = async () => {
         </button>
       </form>
       
-      <p style={{textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#666'}}>
-        Test-konto: adminclimly / ADMIN123!
+    
+    </div>
+  </div>
+)}
+
+{/* Logout Confirmation Modal */}
+{showLogoutConfirm && (
+  <div className="modal-overlay" onClick={() => setShowLogoutConfirm(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close" onClick={() => setShowLogoutConfirm(false)}>×</button>
+      
+      <h2>Logga ut?</h2>
+      
+      <p style={{textAlign: 'center', marginBottom: '30px', color: '#666'}}>
+        Är du säker på att du vill logga ut?
       </p>
+      
+      <div style={{display: 'flex', gap: '15px', justifyContent: 'center'}}>
+        <button 
+          className="btn-secondary"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          Avbryt
+        </button>
+        
+        <button 
+          className="btn-primary"
+          onClick={handleLogout}
+        >
+          Ja, logga ut
+        </button>
+      </div>
     </div>
   </div>
 )}
