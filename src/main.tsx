@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
+import Sources from './pages/Sources';
 
 
 interface CO2FormData {
@@ -654,6 +655,7 @@ const downloadPDF = async () => {
             <a href="#">Vanliga frågor</a>
             <a href="#">Priser</a>
             <a href="#">Supportcenter</a>
+            <a href="/sources">Källor och metodik</a>
           </div>
         </div>
         <div className="footer-bottom">
@@ -752,6 +754,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
+        <Route path="/sources" element={<Sources />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
